@@ -76,6 +76,13 @@ def update_paintsystem_data(self, context):
     ps._update_paintsystem_data()
 
 
+def update_node_tree(self, context):
+    ps = PaintSystem(context)
+    active_group = ps.get_active_group()
+    if active_group:
+        active_group.update_node_tree()
+
+
 class PaintSystemLayer(BaseNestedListItem):
 
     def update_node_tree(self, context):
