@@ -870,3 +870,20 @@ class PaintSystem:
             if item.image and item.image.users <= 2:
                 # print("Removing image")
                 bpy.data.images.remove(item.image)
+
+    def apply_layer_separation(self, node_tree: NodeTree, separation_distance: float):
+        """
+        Apply 3D layer separation based on normals.
+
+        Args:
+            node_tree (NodeTree): The node tree to apply the separation to.
+            separation_distance (float): The distance to separate layers.
+        """
+        for node in node_tree.nodes:
+            if node.type == 'GROUP' and node.node_tree:
+                normal_input = node.inputs.get('Normal')
+                if normal_input and normal_input.is_linked:
+                    normal_socket = normal_input.links[0].from_socket
+                    if normal_socket:
+                        normal_vector = normal_socket.default_value
+                        node.location += Vector(normal_vector) * separation_distance

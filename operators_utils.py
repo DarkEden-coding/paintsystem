@@ -609,6 +609,24 @@ class PAINTSYSTEM_OT_SelectMaterialIndex(Operator):
 #         layout.prop(self, "node_name")
 
 
+class PAINTSYSTEM_OT_ApplyLayerSeparation(Operator):  # P46a6
+    bl_idname = "paint_system.apply_layer_separation"
+    bl_label = "Apply Layer Separation"
+    bl_options = {'REGISTER', 'UNDO'}
+    bl_description = "Apply 3D layer separation based on normals"
+
+    def execute(self, context):
+        ps = PaintSystem(context)
+        active_group = ps.get_active_group()
+        if not active_group:
+            return {'CANCELLED'}
+
+        separation_distance = context.scene.paint_system_settings.layer_separation_distance
+        ps.apply_layer_separation(active_group.node_tree, separation_distance)
+
+        return {'FINISHED'}
+
+
 classes = (
     PAINTSYSTEM_OT_SaveFileAndImages,
     PAINTSYSTEM_OT_AddCameraPlane,
@@ -624,6 +642,7 @@ classes = (
     PAINTSYSTEM_OT_FlipNormals,
     PAINTSYSTEM_OT_RecalculateNormals,
     PAINTSYSTEM_OT_SelectMaterialIndex,
+    PAINTSYSTEM_OT_ApplyLayerSeparation,  # P46a6
     # PAINTSYSTEM_OT_Test,
 )
 

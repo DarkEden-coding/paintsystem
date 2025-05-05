@@ -5,6 +5,7 @@ from bpy.props import (
     FloatVectorProperty,
     EnumProperty,
     IntProperty,
+    FloatProperty,
 )
 import gpu
 from bpy.types import Operator, Context
@@ -1776,6 +1777,51 @@ class PAINTSYSTEM_OT_ApplyEdit(Operator):
         return {'FINISHED'}
 
 
+class PAINTSYSTEM_OT_ToggleLayerSeparation(Operator):
+    """Toggle the use of 3D layer separation"""
+    bl_idname = "paint_system.toggle_layer_separation"
+    bl_label = "Toggle Layer Separation"
+    bl_options = {'REGISTER', 'UNDO'}
+    bl_description = "Toggle the use of 3D layer separation"
+
+    def execute(self, context):
+        ps = PaintSystem(context)
+        ps.settings.use_layer_separation = not ps.settings.use_layer_separation
+        ps.get_active_group().update_node_tree()
+        return {'FINISHED'}
+
+
+class PAINTSYSTEM_OT_SetLayerSeparationDistance(Operator):
+    """Set the distance for 3D layer separation"""
+    bl_idname = "paint_system.set_layer_separation_distance"
+    bl_label = "Set Layer Separation Distance"
+    bl_options = {'REGISTER', 'UNDO'}
+    bl_description = "Set the distance for 3D layer separation"
+
+    distance: FloatProperty(
+        name="Distance",
+        description="Distance to separate layers in 3D space",
+        default=0.1,
+        min=0.0,
+        max=10.0,
+    )
+
+    def execute(self, context):
+        ps = PaintSystem(context)
+        ps.settings.layer_separation_distance = self.distance
+        ps.get_active_group().update_node_tree()
+        return {'FINISHED'}
+
+    def invoke(self, context, event):
+        ps = PaintSystem(context)
+        self.distance = ps.settings.layer_separation_distance
+        return context.window_manager.invoke_props_dialog(self)
+
+    def draw(self, context):
+        layout = self.layout
+        layout.prop(self, "distance")
+
+
 classes = (
     PAINTSYSTEM_OT_DuplicateGroupWarning,
     PAINTSYSTEM_OT_NewGroup,
@@ -1805,6 +1851,8 @@ classes = (
     PAINTSYSTEM_OT_ProjectEdit,
     PAINTSYSTEM_OT_ProjectApply,
     PAINTSYSTEM_OT_QuickEdit,
+    PAINTSYSTEM_OT_ToggleLayerSeparation,
+    PAINTSYSTEM_OT_SetLayerSeparationDistance,
 )
 
 register, unregister = register_classes_factory(classes)

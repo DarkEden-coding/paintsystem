@@ -6,7 +6,8 @@ from bpy.props import (IntProperty,
                        StringProperty,
                        PointerProperty,
                        CollectionProperty,
-                       EnumProperty)
+                       EnumProperty,
+                       FloatProperty)  # Pe840
 from bpy.types import (PropertyGroup, Context,
                        NodeTreeInterface, Nodes, Node, NodeTree, NodeLinks, NodeSocket, Image)
 from .nested_list_manager import BaseNestedListItem, BaseNestedListManager
@@ -570,6 +571,20 @@ class PaintSystemSettings(PropertyGroup):
         name="Template",
         items=TEMPLATE_ENUM,
         default='STANDARD',
+    )
+    layer_separation_distance: FloatProperty(  # Pe840
+        name="Layer Separation Distance",
+        description="Distance to separate layers in 3D space",
+        default=0.1,
+        min=0.0,
+        max=10.0,
+        update=update_node_tree
+    )
+    use_layer_separation: BoolProperty(  # P9698
+        name="Use Layer Separation",
+        description="Enable or disable 3D layer separation",
+        default=False,
+        update=update_node_tree
     )
 
 

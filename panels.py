@@ -1578,6 +1578,10 @@ class MAT_PT_PaintSystemLayersSettings(Panel):
                         node_input_prop(col, layer_node_group,
                                         input.name, text=input.name)
 
+        # Add UI elements to control the layer_separation_distance and use_layer_separation properties
+        layout.prop(ps.settings, "layer_separation_distance", text="Layer Separation Distance")
+        layout.prop(ps.settings, "use_layer_separation", text="Use Layer Separation")
+
 
 class MAT_PT_PaintSystemLayersAdvanced(Panel):
     bl_idname = 'MAT_PT_PaintSystemLayersAdvanced'
